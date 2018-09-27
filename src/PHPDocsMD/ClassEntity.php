@@ -21,6 +21,11 @@ class ClassEntity extends CodeEntity {
     /**
      * @var bool
      */
+    private $isTrait = false;
+
+    /**
+     * @var bool
+     */
     private $abstract = false;
 
     /**
@@ -37,6 +42,11 @@ class ClassEntity extends CodeEntity {
      * @var array
      */
     private $interfaces = [];
+
+    /**
+     * @var array
+     */
+    private $traits = [];
 
     /**
      * @var bool
@@ -79,6 +89,18 @@ class ClassEntity extends CodeEntity {
             return $this->isInterface;
         } else {
             return $this->isInterface = (bool)$toggle;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTrait($toggle=null)
+    {
+        if( $toggle === null ) {
+            return $this->isTrait;
+        } else {
+            return $this->isTrait = (bool)$toggle;
         }
     }
 
@@ -139,6 +161,25 @@ class ClassEntity extends CodeEntity {
     }
 
     /**
+     * @param array $implements
+     */
+    public function setTraits(array $implements)
+    {
+        $this->traits = [];
+        foreach($implements as $trait) {
+            $this->traits[] = Utils::sanitizeClassName($trait);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getTraits()
+    {
+        return $this->traits;
+    }
+
+    /**
      * @return \PHPDocsMD\FunctionEntity[]
      */
     public function getFunctions()
@@ -173,7 +214,7 @@ class ClassEntity extends CodeEntity {
     function generateTitle($format='%label%: %name% %extra%')
     {
         $translate = [
-            '%label%' => $this->isInterface() ? 'Interface' : 'Class',
+            '%label%' => $this->isInterface() ? 'Interface' : $this->isTrait ? 'Trait' : 'Class',
             '%name%' => substr_count($this->getName(), '\\') == 1 ? substr($this->getName(), 1) : $this->getName(),
             '%extra%' => ''
         ];
@@ -181,10 +222,12 @@ class ClassEntity extends CodeEntity {
         if( strpos($format, '%label%') === false ) {
             if( $this->isInterface() )
                 $translate['%extra%'] = '(interface)';
+            elseif( $this->isTrait() )
+                $translate['%extra%'] = '(trait)';
             elseif( $this->isAbstract() )
                 $translate['%extra%'] = '(abstract)';
         } else {
-            $translate['%extra%'] = $this->isAbstract() && !$this->isInterface() ? '(abstract)' : '';
+            $translate['%extra%'] = $this->isAbstract() && !$this->isInterface() && !$this->isTrait() ? '(abstract)' : '';
         }
 
         return trim(strtr($format, $translate));

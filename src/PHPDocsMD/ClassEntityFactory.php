@@ -26,8 +26,10 @@ class ClassEntityFactory
         $docInfo = $this->docInfoExtractor->extractInfo($reflection);
         $this->docInfoExtractor->applyInfoToEntity($reflection, $docInfo, $class);
         $class->isInterface($reflection->isInterface());
+        $class->isTrait($reflection->isTrait());
         $class->isAbstract($reflection->isAbstract());
         $class->setInterfaces(array_keys($reflection->getInterfaces()));
+        $class->setTraits(array_keys($reflection->getTraits()));
         $class->hasIgnoreTag($docInfo->shouldBeIgnored());
 
         if ($reflection->getParentClass()) {

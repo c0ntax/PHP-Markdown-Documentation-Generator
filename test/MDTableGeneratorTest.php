@@ -1,6 +1,10 @@
 <?php
 
-class MDTableGeneratorTest extends PHPUnit_Framework_TestCase {
+namespace PHPDocsMD\Tests;
+
+use PHPUnit\Framework\TestCase;
+
+class MDTableGeneratorTest extends TestCase {
 
     function testDeprecatedFunc()
     {

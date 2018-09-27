@@ -381,10 +381,18 @@ class Reflector implements ReflectorInterface
             $class->getExtends()
         );
         if (!$inheritedFuncDeclaration) {
+            // Traits beat Interfaces
             $inheritedFuncDeclaration = $this->functionFinder->findInClasses(
                 $funcName,
-                $class->getInterfaces()
+                $class->getTraits()
             );
+            // TODO Come back and tidy up this awful nested if!
+            if (!$inheritedFuncDeclaration) {
+                $inheritedFuncDeclaration = $this->functionFinder->findInClasses(
+                    $funcName,
+                    $class->getInterfaces()
+                );
+            }
             if (!$inheritedFuncDeclaration) {
                 throw new \RuntimeException(
                     'Function '.$funcName.' tries to inherit docs but no parent method is found'

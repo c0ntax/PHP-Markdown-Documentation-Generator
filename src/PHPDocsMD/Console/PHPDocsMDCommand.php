@@ -116,7 +116,7 @@ class PHPDocsMDCommand extends \Symfony\Component\Console\Command\Command {
 
                 // generate function table
                 $tableGenerator->openTable();
-                $tableGenerator->doDeclareAbstraction(!$class->isInterface());
+                $tableGenerator->doDeclareAbstraction(!$class->isInterface() && !$class->isTrait());
                 foreach($class->getFunctions() as $func) {
                     if ($func->isReturningNativeClass()) {
                         $classLinks[$func->getReturnType()] = 'http://php.net/manual/en/class.'.
@@ -167,6 +167,15 @@ class PHPDocsMDCommand extends \Symfony\Component\Console\Command\Command {
                         $interfaceNames[] = $anchor ? sprintf('[%s](#%s)', $interface, $anchor) : $interface;
                     }
                     $docs .= PHP_EOL.'*This class implements '.implode(', ', $interfaceNames).'*'.PHP_EOL;
+                }
+
+                if( $traits = $class->getTraits() ) {
+                    $traitNames = [];
+                    foreach($traits as $trait) {
+                        $anchor = $this->getAnchorFromClassCollection($classCollection, $trait);
+                        $traitNames[] = $anchor ? sprintf('[%s](#%s)', $trait, $anchor) : $trait;
+                    }
+                    $docs .= PHP_EOL.'*This class uses '.implode(', ', $traitNames).'*'.PHP_EOL;
                 }
 
                 $body[] = $docs;

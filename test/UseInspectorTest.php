@@ -1,6 +1,10 @@
 <?php
 
-class UseInspectorTest extends PHPUnit_Framework_TestCase {
+namespace PHPDocsMD\Tests;
+
+use PHPUnit\Framework\TestCase;
+
+class UseInspectorTest extends TestCase {
 
     function testInspection()
     {

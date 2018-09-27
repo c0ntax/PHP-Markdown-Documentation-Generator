@@ -1,7 +1,7 @@
 {
     "name": "victorjonsson/markdowndocs",
     "description": "Command line tool for generating markdown-formatted class documentation",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "homepage" : "https://github.com/victorjonsson/PHP-Markdown-Documentation-Generator",
     "license" : "MIT",
     "version" : "1.3.8",
@@ -14,10 +14,17 @@
         "symfony/console": ">=2.6"
     },
     "require-dev" : {
-        "phpunit/phpunit": "3.7.23"
+        "phpunit/phpunit": "^4.0"
     },
     "bin":["bin/phpdoc-md"],
     "autoload": {
-        "psr-0": {"PHPDocsMD": "src/"}
+        "psr-4": {
+            "PHPDocsMD\\": "src/PHPDocsMD"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PHPDocsMD\\Tests\\": "test"
+        }
     }
 }
